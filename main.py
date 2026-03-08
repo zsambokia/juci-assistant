@@ -26,31 +26,6 @@ class WizardInput(BaseModel):
     reflectivity_preference: str
 
 
-from openai import OpenAI
-
-client = OpenAI()
-
-def explain_product(product):
-
-    response = client.responses.create(
-
-        prompt={
-            "id": "pmpt_69adad1be28881958e88071b815518d2019bf30b94065abd",
-            "version": "1"
-        },
-
-        input={
-            "name": product["name"],
-            "family": product["family"],
-            "heat_score": product["heat_score"],
-            "privacy_score": product["privacy_score"],
-            "light_score": product["light_score"]
-        }
-
-    )
-
-    return response.output_text
-
 def load_query():
     with open(QUERY_FILE, "r") as f:
         return f.read()
@@ -90,16 +65,6 @@ def wizard(data: WizardInput):
     result = []
 
     for r in rows:
-        product = {
-            "name": r.name,
-            "family": r.family,
-            "heat_score": r.heat_comfort_score,
-            "privacy_score": r.privacy_score,
-            "light_score": r.natural_light_score
-        }
-
-        explanation = explain_product(product)
-
         result.append({
             "sku": r.sku,
             "name": r.name,
@@ -107,8 +72,7 @@ def wizard(data: WizardInput):
             "family": r.family,
             "image": r.image_url,
             "url": r.product_url,
-            "score": round(r.final_score,2),
-            "explanation": explanation
+            "score": r.final_score
         })
 
     return {"results": result}
