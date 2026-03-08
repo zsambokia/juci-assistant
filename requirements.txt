@@ -1,5 +1,8 @@
+#requirements.txt
 fastapi
 uvicorn
 google-cloud-bigquery
 pydantic
+pydantic[email]
+python-multipart
 openai
