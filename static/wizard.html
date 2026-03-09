@@ -25,11 +25,86 @@
 
       <form id="wizardForm">
         <section class="step active" data-step="1">
-          <h2>1. Milyen felületre keresel megoldást?</h2>
-          <p class="help">
-            Ez segít eldönteni, hogy üvegre vagy polikarbonát / plexi felületre való fóliákat ajánljunk.
-            Polikarbonát esetén azonnal meg tudjuk mutatni az elérhető megoldásokat.
-          </p>
+          <h2>Milyen felületre keresel megoldást?</h2>
+
+            <section class="film-help">
+
+            <p class="help-lead">
+            Nem minden fólia működik minden felületen.  
+            Az <strong>üveg</strong> és a <strong>polikarbonát / plexi</strong> teljesen más tulajdonságokkal rendelkezik,
+            ezért külön fóliák szükségesek hozzájuk.
+            </p>
+
+            <div class="film-grid">
+
+            <div class="film-box">
+
+            <div class="film-icon">🪟</div>
+            <h3>Üveg felület</h3>
+
+            <p class="film-highlight">
+            A legtöbb hővédő fólia üvegre készül.
+            </p>
+
+            <p>
+            A lakások, irodák és kirakatok ablakainak többsége üvegből készül.
+            Ezekhez széles választékban léteznek hővédő, belátásvédő és biztonsági fóliák.
+            </p>
+
+            <ul>
+            <li>☀️ Erős hővédelem nyári meleg ellen</li>
+            <li>🪞 Tükrös vagy neutrális változatok</li>
+            <li>👁️ Belátásvédelem</li>
+            <li>🔒 Biztonsági fóliák is elérhetők</li>
+            </ul>
+
+            </div>
+
+            <div class="film-box">
+
+            <div class="film-icon">🏡</div>
+            <h3>Polikarbonát / plexi</h3>
+
+            <p class="film-highlight">
+            Speciális fólia szükséges.
+            </p>
+
+            <p>
+            A polikarbonát és plexi sokkal jobban melegszik,
+            és másképp reagál a napsugárzásra, mint az üveg.
+            Ezért csak kifejezetten ilyen felületre készült fóliák használhatók.
+            </p>
+
+            <ul>
+            <li>🏠 Terasz tetők</li>
+            <li>🌿 Pergola fedések</li>
+            <li>🚗 Előtetők</li>
+            <li>🌞 Télikertek</li>
+            </ul>
+
+            </div>
+
+            </div>
+
+            <div class="film-important">
+
+            <strong>Miért fontos ez?</strong>
+
+            <p>
+            Ha rossz típusú fólia kerül a felületre,
+            az nem fog megfelelően működni, vagy akár károsíthatja is az anyagot.
+            </p>
+
+            <p>
+            Ezért az első lépésben eldöntjük,
+            <strong>üvegre vagy polikarbonátra keresel megoldást</strong>.
+            </p>
+
+            </div>
+
+            </section>
+
+
           <div class="options two">
             <label class="option-card"><input type="radio" name="surface" value="glass" required><span>Üveg</span></label>
             <label class="option-card"><input type="radio" name="surface" value="polycarbonate"><span>Polikarbonát / plexi</span></label>
@@ -37,21 +112,134 @@
         </section>
 
         <section class="step" data-step="2">
-          <h2>Milyen ablak vagy üvegfelület?</h2>
-          <p class="help">Azért kérdezzük, mert nem mindegy, hogy függőleges ablakról, tetőtériről vagy nagy üvegfalról van szó.</p>
-          <div class="options">
-            <label class="option-card"><input type="radio" name="window_type" value="normal" required><span>Normál függőleges ablak</span></label>
-            <label class="option-card"><input type="radio" name="window_type" value="roof"><span>Tetőtéri ablak</span></label>
-            <label class="option-card"><input type="radio" name="window_type" value="skylight"><span>Üvegtető / felülvilágító</span></label>
-            <label class="option-card"><input type="radio" name="window_type" value="winter_garden"><span>Télikert</span></label>
-            <label class="option-card"><input type="radio" name="window_type" value="storefront"><span>Üvegfal / kirakat</span></label>
-            <label class="option-card"><input type="radio" name="window_type" value="other"><span>Egyéb</span></label>
-          </div>
+            <h2>Milyen típusú ablak vagy üvegfelület van nálad?</h2>
+
+            <p class="help">
+            Az ablak elhelyezkedése nagyon fontos, mert a napsugárzás terhelése jelentősen eltérhet.
+
+            <strong>Tetőtéri ablakok és üvegtetők</strong> sokkal erősebb napsütést kapnak,
+            ezért ezekhez gyakran speciális vagy erősebb hővédő fólia szükséges.
+
+            <strong>Nagy üvegfalaknál és kirakatoknál</strong> pedig a hővédelem mellett a
+            belátásvédelem és a tükröződés is fontos szempont lehet.
+
+            Válaszd ki azt a típust, ami a leginkább hasonlít a felületedre.
+            </p>
+            <div class="options">
+                <label class="option-card"><input type="radio" name="window_type" value="normal" required><span>Normál függőleges ablak</span></label>
+                <label class="option-card"><input type="radio" name="window_type" value="roof"><span>Tetőtéri ablak</span></label>
+                <label class="option-card"><input type="radio" name="window_type" value="skylight"><span>Üvegtető / felülvilágító</span></label>
+                <label class="option-card"><input type="radio" name="window_type" value="winter_garden"><span>Télikert</span></label>
+                <label class="option-card"><input type="radio" name="window_type" value="storefront"><span>Üvegfal / kirakat</span></label>
+                <label class="option-card"><input type="radio" name="window_type" value="other"><span>Egyéb</span></label>
+            </div>
         </section>
 
         <section class="step polycarbonate-skip" data-step="3">
           <h2>Milyen üvegezés van nálad?</h2>
-          <p class="help">Ha nem vagy benne biztos, nyugodtan válaszd a „Nem tudom” opciót, attól még tudunk ajánlani.</p>
+          <section class="film-help">
+
+            <p class="help-lead">
+            Az ablakok különböző rétegű üvegből készülhetnek.  
+            Ez azért fontos, mert egyes fóliák csak bizonyos üvegtípusokon használhatók biztonságosan.
+            </p>
+
+            <div class="film-grid">
+
+            <div class="film-box">
+
+            <div class="film-icon">🪟</div>
+            <h3>Egyrétegű üveg</h3>
+
+            <p class="film-highlight">
+            Régebbi ablakoknál gyakori.
+            </p>
+
+            <p>
+            Ez a legegyszerűbb üveg típus.  
+            Régebbi családi házaknál, melléképületeknél vagy garázsoknál fordul elő.
+            </p>
+
+            <ul>
+            <li>régi fa ablakok</li>
+            <li>régi társasházak</li>
+            <li>melléképületek</li>
+            </ul>
+
+            </div>
+
+
+            <div class="film-box">
+
+            <div class="film-icon">🪟🪟</div>
+            <h3>Kétrétegű üveg</h3>
+
+            <p class="film-highlight">
+            A leggyakoribb modern ablak.
+            </p>
+
+            <p>
+            Két üvegréteg van egymás mellett, köztük szigetelő légréteggel.  
+            A legtöbb lakásban és családi házban ez található.
+            </p>
+
+            <ul>
+            <li>2000 utáni ablakok</li>
+            <li>műanyag nyílászárók</li>
+            <li>jobb hőszigetelés</li>
+            </ul>
+
+            </div>
+
+
+            <div class="film-box">
+
+            <div class="film-icon">❄️</div>
+            <h3>Low-E üveg</h3>
+
+            <p class="film-highlight">
+            Energiatakarékos bevonat.
+            </p>
+
+            <p>
+            A Low-E üvegek speciális fémréteget tartalmaznak,
+            amely visszaveri a hőt az üveg belsejében.
+            Ez javítja az ablak hőszigetelését.
+            </p>
+
+            <ul>
+            <li>újabb energiatakarékos ablakok</li>
+            <li>gyakori modern lakásoknál</li>
+            <li>kétrétegű vagy háromrétegű kivitel</li>
+            </ul>
+
+            </div>
+
+            </div>
+
+
+            <div class="film-important">
+
+            <strong>Miért fontos ez a fólia kiválasztásánál?</strong>
+
+            <p>
+            A Low-E és többrétegű üvegek már eleve visszaverik a hőt.
+            Ha nem megfelelő fólia kerül rájuk, az üveg túlmelegedhet.
+            </p>
+
+            <p>
+            Ezért bizonyos esetekben <strong>kültéri fólia ajánlott</strong>,
+            vagy speciális típusra van szükség.
+            </p>
+
+            <p>
+            Ha nem vagy biztos az üveg típusában, válaszd a  
+            <strong>„Nem tudom”</strong> opciót — így is tudunk megfelelő fóliát ajánlani.
+            </p>
+
+            </div>
+
+            </section>
           <div class="options">
             <label class="option-card"><input type="radio" name="glass_type" value="single" required><span>Egyrétegű</span></label>
             <label class="option-card"><input type="radio" name="glass_type" value="double"><span>Kétrétegű</span></label>
@@ -62,8 +250,94 @@
         </section>
 
         <section class="step polycarbonate-skip" data-step="4">
-          <h2>Hova telepíthető a fólia?</h2>
-          <p class="help">Ha ezt sem tudod biztosan, válaszd a „Nem tudom” lehetőséget.</p>
+          <section class="film-help">
+
+                <h2>Hova telepíthető a fólia?</h2>
+
+                <p class="help-lead">
+                Az ablakfólia <strong>az üveg külső vagy belső oldalára</strong> is kerülhet.  
+                A választás nagyon fontos, mert nagyban befolyásolja a <strong>hővédelmet, a tartósságot és a biztonságos használatot</strong>.
+                </p>
+
+                <div class="film-grid">
+
+                <div class="film-box exterior">
+                <div class="film-icon">☀️</div>
+                <h3>Kültéri telepítés</h3>
+
+                <p class="film-highlight">
+                A legerősebb hővédelem.
+                </p>
+
+                <p>
+                A külső fólia már azelőtt visszaveri a napsugarakat,
+                hogy azok átjutnának az üvegen. Így az üveg kevésbé melegszik fel,
+                és a hő nagy része kint marad.
+                </p>
+
+                <ul>
+                <li>☀️ Maximális hővédelem nyári meleg ellen</li>
+                <li>🏠 Ideális nagy üvegfelületeknél</li>
+                <li>🌡️ Jelentősen csökkenti a lakás felmelegedését</li>
+                <li>🪟 Modern ablakoknál gyakran ez a legjobb megoldás</li>
+                </ul>
+
+                <p class="film-note">
+                ⚠️ Akkor ajánlott, ha az ablak külső oldala biztonságosan elérhető.
+                </p>
+
+                </div>
+
+
+                <div class="film-box interior">
+
+                <div class="film-icon">🏠</div>
+                <h3>Beltéri telepítés</h3>
+
+                <p class="film-highlight">
+                Egyszerűbb telepítés.
+                </p>
+
+                <p>
+                A beltéri fólia az üveg belső oldalára kerül.  
+                A napsugárzás egy része már bejut az üvegbe,
+                ezért a hővédelem általában kisebb, viszont
+                a telepítés sok esetben könnyebb.
+                </p>
+
+                <ul>
+                <li>🔧 Egyszerűbb felhelyezés</li>
+                <li>🏢 Ideális társasházaknál</li>
+                <li>🪟 Ha kívülről nem hozzáférhető az üveg</li>
+                <li>🌤️ Mérsékelt hővédelem</li>
+                </ul>
+
+                <p class="film-note">
+                ⚠️ Nem minden üvegtípusnál alkalmazható.
+                </p>
+
+                </div>
+
+                </div>
+
+
+                <div class="film-important">
+
+                <strong>Miért fontos a jó választás?</strong>
+
+                <p>
+                Az üveg típusa, az ablak elhelyezkedése és a napsütés iránya mind befolyásolja,
+                hogy melyik telepítés biztonságos és hatékony.
+                </p>
+
+                <p>
+                Ha nem vagy biztos benne, válaszd a <strong>„Nem tudom”</strong> lehetőséget —
+                az asszisztens segít megtalálni a megfelelő fóliát.
+                </p>
+
+                </div>
+
+                </section>
           <div class="options">
             <label class="option-card"><input type="radio" name="install_side" value="inside" required><span>Belülről</span></label>
             <label class="option-card"><input type="radio" name="install_side" value="outside"><span>Kívülről</span></label>
@@ -74,7 +348,102 @@
 
         <section class="step polycarbonate-skip" data-step="5">
         <h2>Milyen extra funkció fontos még a hővédelem mellett?</h2>
-        <p class="help">A hővédelem az alap. Itt azt jelöld, kérsz-e emellett plusz funkciót is.</p>
+       
+        <section class="film-help">
+
+            <p class="help-lead">
+            A hővédelem az ablakfóliák leggyakoribb funkciója, de sok fólia ennél többet is tud.
+            Bizonyos típusok egyszerre nyújtanak <strong>hővédelmet, belátásvédelmet vagy biztonsági védelmet</strong>.
+            </p>
+
+            <div class="film-grid">
+
+            <div class="film-box">
+
+            <div class="film-icon">☀️</div>
+            <h3>Csak hővédelem</h3>
+
+            <p class="film-highlight">
+            A nyári meleg csökkentése.
+            </p>
+
+            <p>
+            A hővédő fólia visszaveri a napsugárzás jelentős részét,
+            így az ablakon keresztül sokkal kevesebb hő jut a helyiségbe.
+            </p>
+
+            <ul>
+            <li>🌡️ Csökkenti a lakás felmelegedését</li>
+            <li>❄️ Kellemesebb belső hőmérséklet</li>
+            <li>⚡ Kevesebb klímahasználat</li>
+            </ul>
+
+            </div>
+
+            <div class="film-box">
+
+            <div class="film-icon">🪞</div>
+            <h3>Hővédelem + belátásvédelem</h3>
+
+            <p class="film-highlight">
+            Nappali privacy.
+            </p>
+
+            <p>
+            A tükrös vagy sötétített fóliák nappal kívülről visszatükrözik a fényt,
+            így nehezebb belátni az ablakon.
+            </p>
+
+            <ul>
+            <li>👁️ Csökkenti a belátást</li>
+            <li>🏙️ Ideális utcafronti ablakoknál</li>
+            <li>🏢 Gyakori irodáknál és lakásoknál</li>
+            </ul>
+
+            </div>
+
+            <div class="film-box">
+
+            <div class="film-icon">🔒</div>
+            <h3>Hővédelem + biztonság</h3>
+
+            <p class="film-highlight">
+            Üvegvédelem.
+            </p>
+
+            <p>
+            A biztonsági fóliák megerősítik az üveget,
+            így törés esetén egyben tartják a szilánkokat,
+            és lassíthatják a betörési kísérleteket.
+            </p>
+
+            <ul>
+            <li>🛡️ Szilánk elleni védelem</li>
+            <li>🏠 Betörés lassítása</li>
+            <li>👨‍👩‍👧 Gyerekek és háziállatok védelme</li>
+            </ul>
+
+            </div>
+
+            </div>
+
+            <div class="film-important">
+
+            <strong>Mit érdemes választani?</strong>
+
+            <p>
+            Ha csak a nyári meleg zavar, elegendő egy erős hővédő fólia.
+            </p>
+
+            <p>
+            Ha viszont szeretnéd <strong>csökkenteni a belátást</strong> vagy
+            <strong>növelni az üveg biztonságát</strong>,
+            érdemes olyan fóliát választani, amely több funkciót is kombinál.
+            </p>
+
+            </div>
+
+            </section>
         <div class="options">
             <label class="option-card"><input type="radio" name="main_goal" value="heat" required><span>Nem fontos más extra</span></label>
             <label class="option-card"><input type="radio" name="main_goal" value="heat_privacy"><span>Belátás / Kilátás elleni védelem</span></label>
@@ -84,7 +453,109 @@
 
         <section class="step polycarbonate-skip" data-step="6">
             <h2>Milyen belátásvédelem kell?</h2>
-            <p class="help">Fontos: a legtöbb tükrös fólia főleg nappal működik erősebben. Az éjjeli takaráshoz külön megoldás is kellhet.</p>
+            <section class="film-help">
+
+                <p class="help-lead">
+                A belátásvédelem azt jelenti, hogy mennyire lehet kívülről belátni az ablakon.
+                Fontos tudni, hogy a legtöbb hővédő vagy tükrös fólia
+                <strong>fénykülönbség alapján működik</strong>.
+                </p>
+
+                <div class="film-grid">
+
+                <div class="film-box">
+
+                <div class="film-icon">☀️</div>
+                <h3>Nappali belátásvédelem</h3>
+
+                <p class="film-highlight">
+                Amikor kint világosabb van.
+                </p>
+
+                <p>
+                A tükrös és sötétített fóliák nappal általában
+                <strong>csökkentik a belátást kívülről</strong>,
+                mert a külső fény visszatükröződik az üvegen.
+                </p>
+
+                <ul>
+                <li>☀️ nappali napsütésben működik a legerősebben</li>
+                <li>👁️ kívülről nehezebb belátni</li>
+                <li>🪟 belülről továbbra is ki lehet látni</li>
+                </ul>
+
+                </div>
+
+
+                <div class="film-box">
+
+                <div class="film-icon">🌙</div>
+                <h3>Este vagy sötétben</h3>
+
+                <p class="film-highlight">
+                A hatás megfordulhat.
+                </p>
+
+                <p>
+                Ha bent világosabb van, mint kint (például este lámpafénynél),
+                akkor az ablak inkább belülről világít,
+                és kívülről könnyebben belátható lehet.
+                </p>
+
+                <ul>
+                <li>💡 beltéri világításnál</li>
+                <li>🌙 sötétedés után</li>
+                <li>🪟 a tükörhatás csökken</li>
+                </ul>
+
+                </div>
+
+
+                <div class="film-box">
+
+                <div class="film-icon">🎨</div>
+                <h3>Dekor vagy matt fóliák</h3>
+
+                <p class="film-highlight">
+                Állandó takarás.
+                </p>
+
+                <p>
+                A matt vagy dekor fóliák nem a fénykülönbség alapján működnek,
+                ezért nappal és éjszaka is takarnak.
+                Cserébe viszont nem lehet rajtuk átlátni.
+                </p>
+
+                <ul>
+                <li>🚿 fürdőszobák</li>
+                <li>🏢 irodai üvegfalak</li>
+                <li>🚪 ajtók és válaszfalak</li>
+                </ul>
+
+                </div>
+
+                </div>
+
+                <div class="film-important">
+
+                <strong>Fontos különbség</strong>
+
+                <p>
+                A legtöbb hővédő fólia <strong>nappali belátásvédelmet</strong> ad.
+                Ez azt jelenti, hogy nappal kívülről nehezebb belátni,
+                de éjszaka — amikor bent világosabb van —
+                a hatás csökkenhet.
+                </p>
+
+                <p>
+                Ha teljes takarást szeretnél éjjel is,
+                akkor általában más megoldás is szükséges,
+                például függöny, redőny vagy matt dekor fólia.
+                </p>
+
+                </div>
+
+</section>
             <div class="options">
                 <label class="option-card"><input type="radio" name="privacy_level" value="none"><span>Nem fontos</span></label>
                 <label class="option-card"><input type="radio" name="privacy_level" value="daytime"><span>Csak nappal</span></label>
@@ -95,38 +566,353 @@
 
         <section class="step polycarbonate-skip" data-step="7">
           <h2>Mennyire lehet tükrös?</h2>
-          <p class="help">Van, akit egyáltalán nem zavar a tükrös hatás, más inkább minél természetesebb üveget szeretne.</p>
+          
+        <section class="film-help">
+
+            <p class="help-lead">
+                A hővédő fóliák megjelenése nagyon eltérő lehet.  
+                Van, amelyik <strong>erősen tükrös</strong>, kívülről szinte tükörként hat,
+                míg más fóliák csak <strong>enyhén fényvisszaverők</strong>, vagy szinte
+                <strong>észrevehetetlenek az üvegen</strong>.
+            </p>
+
+            <div class="film-grid">
+
+                <div class="film-box">
+                <div class="film-icon">🪞</div>
+                <h3>Erősen tükrös fólia</h3>
+
+                <p class="film-highlight">
+                    Látványos, fémes hatás kívülről.
+                </p>
+
+                <p>
+                    Ezek a fóliák kívülről jól láthatóan visszatükrözik a környezetet.
+                    Sokan azért választják, mert modern, „kirakatszerű” megjelenést adnak,
+                    és nappal általában erősebb belátásvédelmet is nyújtanak.
+                </p>
+
+                <ul>
+                    <li>🪞 Erős tükörhatás kívülről</li>
+                    <li>☀️ Gyakran erős hővédelem</li>
+                    <li>👁️ Jobb nappali belátásvédelem</li>
+                    <li>🏢 Irodákhoz, utcafronti felületekhez gyakori választás</li>
+                </ul>
+                </div>
+
+                <div class="film-box">
+                <div class="film-icon">✨</div>
+                <h3>Enyhén tükrös fólia</h3>
+
+                <p class="film-highlight">
+                    Visszafogottabb, elegáns megjelenés.
+                </p>
+
+                <p>
+                    Ezeknél a fóliáknál van némi fényvisszaverés,
+                    de az üveg összhatása természetesebb marad.
+                    Jó választás lehet, ha szeretnél hővédelmet és valamennyi privacy-t,
+                    de nem szeretnél nagyon feltűnő tükrös homlokzatot.
+                </p>
+
+                <ul>
+                    <li>🌤️ Finomabb külső megjelenés</li>
+                    <li>🪟 Természetesebb üveghatás</li>
+                    <li>☀️ Jó hővédelem</li>
+                    <li>🏠 Lakóházaknál gyakran ez az ideális kompromisszum</li>
+                </ul>
+                </div>
+
+                <div class="film-box">
+                <div class="film-icon">🫥</div>
+                <h3>Neutrális / szinte láthatatlan fólia</h3>
+
+                <p class="film-highlight">
+                    Minél természetesebb üveghatás.
+                </p>
+
+                <p>
+                    Ezek a fóliák úgy készülnek, hogy az üveg megjelenését a lehető legkevésbé változtassák meg.
+                    Akkor ideálisak, ha nem szeretnél tükrös homlokzatot, és fontos,
+                    hogy az ablak kívülről és belülről is minél természetesebb maradjon.
+                </p>
+
+                <ul>
+                    <li>🪟 Alig változtatja meg az üveg kinézetét</li>
+                    <li>🏡 Lakóingatlanokra nagyon kedvelt</li>
+                    <li>👀 Diszkrét megoldás</li>
+                    <li>☀️ Létezik belőle erős hővédő változat is</li>
+                </ul>
+                </div>
+
+            </div>
+
+            <div class="film-important">
+                <strong>Mire gondolj, amikor a tükrösségről döntesz?</strong>
+
+                <p>
+                A tükrösség főleg azt jelenti, hogy <strong>kívülről mennyire lesz fémes, visszacsillanó az üveg</strong>.
+                Általánosságban igaz, hogy minél tükrösebb egy fólia, annál látványosabb a megjelenése.
+                </p>
+
+                <p>
+                Sokan szeretik ezt, mert modern hatást ad, és nappal gyakran jobb belátásvédelmet is nyújt.
+                Mások viszont inkább azt szeretnék, hogy az ablak <strong>minél természetesebb maradjon</strong>,
+                és a fólia szinte ne is látszódjon.
+                </p>
+
+                <p>
+                Ezért itt nem azt kérdezzük, hogy „jó vagy rossz a tükrös fólia”,
+                hanem azt, hogy <strong>te mennyire szeretnéd vagy mennyire kerülöd ezt a hatást</strong>.
+                </p>
+            </div>
+
+            <div class="film-important">
+                <strong>Fontos tudni:</strong>
+
+                <p>
+                A tükrösség és a belátásvédelem gyakran összefügg, de nem ugyanaz.
+                Egy tükrösebb fólia nappal általában jobban takar, viszont nem minden esetben ez a legszebb megoldás lakóházra.
+                </p>
+
+                <p>
+                Ha számodra az a legfontosabb, hogy az üveg <strong>szinte eredeti maradjon</strong>,
+                akkor válaszd a <strong>„Ne legyen tükrös”</strong> vagy a
+                <strong>„Szinte láthatatlan legyen”</strong> opciót.
+                </p>
+            </div>
+
+            </section>
+
+
           <div class="options">
-            <label class="option-card"><input type="radio" name="reflectivity_tolerance" value="mirror_ok" required><span>Nem gond, lehet tükrös</span></label>
-            <label class="option-card"><input type="radio" name="reflectivity_tolerance" value="slightly"><span>Csak enyhén</span></label>
-            <label class="option-card"><input type="radio" name="reflectivity_tolerance" value="not_mirror"><span>Ne legyen tükrös</span></label>
-            <label class="option-card"><input type="radio" name="reflectivity_tolerance" value="almost_invisible"><span>Szinte láthatatlan legyen</span></label>
+            <label class="option-card"><input type="radio" name="reflectivity_tolerance" value="mirror_ok" required><span>Nem gond, lehet erősen tükrös</span></label>
+            <label class="option-card"><input type="radio" name="reflectivity_tolerance" value="slightly"><span>Csak enyhén legyen tükrös</span></label>
+            <label class="option-card"><input type="radio" name="reflectivity_tolerance" value="not_mirror"><span>Inkább ne legyen tükrös</span></label>
+            <label class="option-card"><input type="radio" name="reflectivity_tolerance" value="almost_invisible"><span>Szinte láthatatlan legyen az üvegen</span></label>
           </div>
         </section>
         
         <section class="step polycarbonate-skip" data-step="8">
             <h2>Zavar, ha a fólia belülről tükröződik?</h2>
-            <p class="help">
-                Egyes hővédő fóliák nappal kifelé tükröznek, de bizonyos fényviszonyoknál
-                belülről is lehet enyhe tükörhatás.
-            </p>
+            <section class="film-help">
+
+                <p class="help-lead">
+                A tükrös vagy fémezett hővédő fóliák nappal általában kifelé tükröznek.
+                Ez segít visszaverni a napsugarakat és csökkenteni a belátást kívülről.
+                </p>
+
+                <div class="film-grid">
+
+                <div class="film-box">
+
+                <div class="film-icon">☀️</div>
+                <h3>Nappali fényben</h3>
+
+                <p class="film-highlight">
+                A tükörhatás főleg kívül jelenik meg.
+                </p>
+
+                <p>
+                Amikor kint világosabb van, mint bent, a fólia inkább
+                <strong>kifelé tükröz</strong>. Ilyenkor a külső oldalról
+                nehezebb belátni az ablakon.
+                </p>
+
+                <ul>
+                <li>☀️ erős napsütésnél működik a legjobban</li>
+                <li>👁️ kívülről csökkenti a belátást</li>
+                <li>🪟 belülről általában jól átlátható</li>
+                </ul>
+
+                </div>
+
+
+                <div class="film-box">
+
+                <div class="film-icon">💡</div>
+                <h3>Ha bent erősebb a fény</h3>
+
+                <p class="film-highlight">
+                Belülről is megjelenhet enyhe tükörhatás.
+                </p>
+
+                <p>
+                Ha a helyiségben sok fény van (például este világítás mellett),
+                vagy sötétebb az ég, a fólia belülről is adhat
+                <strong>enyhe tükröződést</strong>.
+                </p>
+
+                <ul>
+                <li>🌙 este világításnál</li>
+                <li>💡 erős beltéri fényben</li>
+                <li>🪟 bizonyos szögekből látható</li>
+                </ul>
+
+                </div>
+
+
+                <div class="film-box">
+
+                <div class="film-icon">🪟</div>
+                <h3>Neutrális fóliák</h3>
+
+                <p class="film-highlight">
+                Természetesebb üveghatás.
+                </p>
+
+                <p>
+                Vannak olyan hővédő fóliák is, amelyek kevésbé fémezettek,
+                ezért sokkal kevésbé tükröződnek belülről.
+                </p>
+
+                <ul>
+                <li>👀 természetesebb kilátás</li>
+                <li>🏡 lakóházaknál kedvelt</li>
+                <li>✨ kevésbé feltűnő</li>
+                </ul>
+
+                </div>
+
+                </div>
+
+                <div class="film-important">
+
+                <strong>Mikor érdemes figyelni erre?</strong>
+
+                <p>
+                Ha sok időt töltesz az ablak közelében — például számítógépnél dolgozol,
+                vagy fontos a teljesen természetes kilátás — akkor érdemes
+                <strong>kevésbé tükröződő fóliát választani</strong>.
+                </p>
+
+                <p>
+                Ha viszont a fő cél a <strong>hővédelem vagy a nappali belátás csökkentése</strong>,
+                akkor a tükrösebb fóliák általában hatékonyabbak.
+                </p>
+
+                </div>
+
+                </section>
 
             <div class="options">
-                <label class="option-card">
-                <input type="radio" name="interior_reflection_sensitive" value="false" required>
-                <span>Nem zavar</span>
-                </label>
 
-                <label class="option-card">
-                <input type="radio" name="interior_reflection_sensitive" value="true">
-                <span>Igen, inkább természetes üveg hatást szeretnék</span>
-                </label>
+            <label class="option-card">
+            <input type="radio" name="interior_reflection_sensitive" value="false" required>
+            <span>Nem gond, ha néha enyhén tükröződik</span>
+            </label>
+
+            <label class="option-card">
+            <input type="radio" name="interior_reflection_sensitive" value="true">
+            <span>Inkább természetes, tükröződésmentes üveget szeretnék</span>
+            </label>
+
             </div>
-            </section>
+
+
+        </section>
 
         <section class="step polycarbonate-skip" data-step="9">
           <h2>Mennyire maradjon világos bent?</h2>
-          <p class="help">Ezzel azt lövöd be, hogy mennyire fontos a természetes fény megtartása.</p>
+          <section class="film-help">
+
+            <p class="help-lead">
+            A hővédő fóliák különböző mértékben engedik át a természetes fényt.
+            Ez határozza meg, hogy mennyire marad világos a helyiség az ablak mögött.
+            </p>
+
+            <div class="film-grid">
+
+            <div class="film-box">
+
+            <div class="film-icon">☀️</div>
+            <h3>Minél világosabb maradjon</h3>
+
+            <p class="film-highlight">
+            Természetes fény prioritás.
+            </p>
+
+            <p>
+            A világos hővédő fóliák sok fényt engednek át,
+            így a helyiség szinte ugyanannyira világos marad,
+            mint fólia nélkül.
+            </p>
+
+            <ul>
+            <li>🪟 természetes üveghatás</li>
+            <li>💡 kevés fényveszteség</li>
+            <li>🏡 lakóházaknál gyakori választás</li>
+            </ul>
+
+            </div>
+
+
+            <div class="film-box">
+
+            <div class="film-icon">🌤️</div>
+            <h3>Közepes sötétítés</h3>
+
+            <p class="film-highlight">
+            Jó kompromisszum.
+            </p>
+
+            <p>
+            Ezek a fóliák már jobban szűrik a napsugarakat,
+            de a helyiség továbbra is világos marad.
+            </p>
+
+            <ul>
+            <li>☀️ erősebb hővédelem</li>
+            <li>👁️ gyakran jobb belátásvédelem</li>
+            <li>🏠 sok lakásnál ideális</li>
+            </ul>
+
+            </div>
+
+
+            <div class="film-box">
+
+            <div class="film-icon">🕶️</div>
+            <h3>Erősebb sötétítés</h3>
+
+            <p class="film-highlight">
+            Maximális hővédelem.
+            </p>
+
+            <p>
+            A sötétebb vagy erősen tükrös fóliák több napsugarat vernek vissza,
+            ezért általában erősebb hővédelmet adnak,
+            viszont kissé csökkentik a bejutó fényt.
+            </p>
+
+            <ul>
+            <li>🌡️ erősebb hővédelem</li>
+            <li>🪞 gyakran tükrösebb megjelenés</li>
+            <li>🏢 irodák és erősen napos ablakok</li>
+            </ul>
+
+            </div>
+
+            </div>
+
+            <div class="film-important">
+
+            <strong>Mire érdemes gondolni?</strong>
+
+            <p>
+            Ha a szoba természetes fénye nagyon fontos,
+            érdemes világosabb fóliát választani.
+            </p>
+
+            <p>
+            Ha viszont a nyári meleg a legnagyobb probléma,
+            akkor egy erősebb hővédő fólia — ami kissé sötétíthet —
+            hatékonyabb lehet.
+            </p>
+
+            </div>
+
+</section>
           <div class="options">
             <label class="option-card"><input type="radio" name="brightness_preference" value="very_bright" required><span>Minél világosabb</span></label>
             <label class="option-card"><input type="radio" name="brightness_preference" value="medium"><span>Közepes sötétítés oké</span></label>
