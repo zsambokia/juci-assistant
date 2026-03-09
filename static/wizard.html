@@ -26,7 +26,10 @@
       <form id="wizardForm">
         <section class="step active" data-step="1">
           <h2>1. Milyen felületre keresel megoldást?</h2>
-          <p class="help">Ez segít eldönteni, hogy üvegre vagy inkább műanyag jellegű felületre való fóliákat keressünk.</p>
+          <p class="help">
+            Ez segít eldönteni, hogy üvegre vagy polikarbonát / plexi felületre való fóliákat ajánljunk.
+            Polikarbonát esetén azonnal meg tudjuk mutatni az elérhető megoldásokat.
+          </p>
           <div class="options two">
             <label class="option-card"><input type="radio" name="surface" value="glass" required><span>Üveg</span></label>
             <label class="option-card"><input type="radio" name="surface" value="polycarbonate"><span>Polikarbonát / plexi</span></label>
@@ -34,7 +37,7 @@
         </section>
 
         <section class="step" data-step="2">
-          <h2>2. Milyen ablak vagy üvegfelület?</h2>
+          <h2>Milyen ablak vagy üvegfelület?</h2>
           <p class="help">Azért kérdezzük, mert nem mindegy, hogy függőleges ablakról, tetőtériről vagy nagy üvegfalról van szó.</p>
           <div class="options">
             <label class="option-card"><input type="radio" name="window_type" value="normal" required><span>Normál függőleges ablak</span></label>
@@ -46,8 +49,8 @@
           </div>
         </section>
 
-        <section class="step" data-step="3">
-          <h2>3. Milyen üvegezés van nálad?</h2>
+        <section class="step polycarbonate-skip" data-step="3">
+          <h2>Milyen üvegezés van nálad?</h2>
           <p class="help">Ha nem vagy benne biztos, nyugodtan válaszd a „Nem tudom” opciót, attól még tudunk ajánlani.</p>
           <div class="options">
             <label class="option-card"><input type="radio" name="glass_type" value="single" required><span>Egyrétegű</span></label>
@@ -58,8 +61,8 @@
           </div>
         </section>
 
-        <section class="step" data-step="4">
-          <h2>4. Hova telepíthető a fólia?</h2>
+        <section class="step polycarbonate-skip" data-step="4">
+          <h2>Hova telepíthető a fólia?</h2>
           <p class="help">Ha ezt sem tudod biztosan, válaszd a „Nem tudom” lehetőséget.</p>
           <div class="options">
             <label class="option-card"><input type="radio" name="install_side" value="inside" required><span>Belülről</span></label>
@@ -69,8 +72,8 @@
           </div>
         </section>
 
-        <section class="step" data-step="5">
-        <h2>5. Milyen extra funkció fontos még a hővédelem mellett?</h2>
+        <section class="step polycarbonate-skip" data-step="5">
+        <h2>Milyen extra funkció fontos még a hővédelem mellett?</h2>
         <p class="help">A hővédelem az alap. Itt azt jelöld, kérsz-e emellett plusz funkciót is.</p>
         <div class="options">
             <label class="option-card"><input type="radio" name="main_goal" value="heat" required><span>Nem fontos más extra</span></label>
@@ -79,8 +82,8 @@
         </div>
         </section>
 
-        <section class="step" data-step="6">
-            <h2>6. Milyen belátásvédelem kell?</h2>
+        <section class="step polycarbonate-skip" data-step="6">
+            <h2>Milyen belátásvédelem kell?</h2>
             <p class="help">Fontos: a legtöbb tükrös fólia főleg nappal működik erősebben. Az éjjeli takaráshoz külön megoldás is kellhet.</p>
             <div class="options">
                 <label class="option-card"><input type="radio" name="privacy_level" value="none"><span>Nem fontos</span></label>
@@ -90,8 +93,8 @@
             </div>
         </section>
 
-        <section class="step" data-step="7">
-          <h2>7. Mennyire lehet tükrös?</h2>
+        <section class="step polycarbonate-skip" data-step="7">
+          <h2>Mennyire lehet tükrös?</h2>
           <p class="help">Van, akit egyáltalán nem zavar a tükrös hatás, más inkább minél természetesebb üveget szeretne.</p>
           <div class="options">
             <label class="option-card"><input type="radio" name="reflectivity_tolerance" value="mirror_ok" required><span>Nem gond, lehet tükrös</span></label>
@@ -101,8 +104,8 @@
           </div>
         </section>
         
-        <section class="step" data-step="8">
-            <h2>8. Zavar, ha a fólia belülről tükröződik?</h2>
+        <section class="step polycarbonate-skip" data-step="8">
+            <h2>Zavar, ha a fólia belülről tükröződik?</h2>
             <p class="help">
                 Egyes hővédő fóliák nappal kifelé tükröznek, de bizonyos fényviszonyoknál
                 belülről is lehet enyhe tükörhatás.
@@ -121,8 +124,8 @@
             </div>
             </section>
 
-        <section class="step" data-step="9">
-          <h2>9. Mennyire maradjon világos bent?</h2>
+        <section class="step polycarbonate-skip" data-step="9">
+          <h2>Mennyire maradjon világos bent?</h2>
           <p class="help">Ezzel azt lövöd be, hogy mennyire fontos a természetes fény megtartása.</p>
           <div class="options">
             <label class="option-card"><input type="radio" name="brightness_preference" value="very_bright" required><span>Minél világosabb</span></label>
@@ -132,8 +135,8 @@
         </section>
 
        
-        <section class="step" data-step="10">
-          <h2>10. Mekkora felületre keresel fóliát?</h2>
+        <section class="step " data-step="10">
+          <h2>Mekkora felületre keresel fóliát?</h2>
           <p class="help">A szélesség különösen fontos, mert csak olyan fóliát ajánlunk, ami méretben is passzolhat.</p>
 
           <div class="field-grid">

@@ -38,12 +38,16 @@ const sessionId = params.get("session");
 
 async function loadResults(){
 
-  const res = await fetch("/wizard/result?session=" + sessionId);
-  const data = await res.json();
+    const res = await fetch("/wizard/result?session=" + sessionId);
 
-  document.getElementById("summaryText").innerHTML = data.summary;
+    if(!res.ok){
+        throw new Error("Nem sikerült betölteni az eredményeket.");
+    }
 
-  renderResults(data);
+    const data = await res.json();
+    document.getElementById("summaryText").innerHTML = data.summary;
+
+    renderResults(data);
 }
 
 
@@ -253,9 +257,20 @@ return "ℹ Megfontolható";
 
 
 function stars(n){
+  n = Number(n) || 0;
   return "★".repeat(n) + "☆".repeat(5-n);
 }
 
+
+if(!sessionId){
+  document.getElementById("resultCards").innerHTML = `
+  <div class="lead-box">
+  <h3>Nem található eredmény</h3>
+  <p>Az ajánlás linkje hiányos vagy lejárt.</p>
+  </div>
+  `;
+  throw new Error("Missing session id");
+}
 
 </script>
 

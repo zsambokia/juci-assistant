@@ -21,53 +21,118 @@ let currentStep = 0;
 let sessionId = null;
 let lastAnswers = null;
 
+function hideGlassSteps(){
 
+  if(!isPolycarbonateFlow()) return;
+
+  steps.forEach((step,i)=>{
+    if(i > 0 && i < 9){
+
+      step.style.display = "none";
+
+      step.querySelectorAll("[required]").forEach(el=>{
+        el.required = false;
+      });
+
+    }
+  });
+
+}
 
 function showStep(index) {
   
   const goal = document.querySelector('input[name="main_goal"]:checked')?.value;
 
+  if (goal !== "heat_privacy") {
+    if (index === 5) index = 6;
+    if (index === 6 && currentStep === 7) index = 4;
+  }
 
-    // privacy step kihagyása előre és vissza is
-    if (goal !== "heat_privacy") {
-        if (index === 5) index = 6;
-        if (index === 6 && currentStep === 7) index = 4;
-    }
-
-
-    steps.forEach((step, i) => {
+  steps.forEach((step, i) => {
     step.classList.toggle("active", i === index);
   });
 
   currentStep = index;
-  const total = steps.length;
-  const current = currentStep + 1;
+
+  let total;
+  let current;
+
+  if(isPolycarbonateFlow()){
+
+    total = 2;
+
+    if(currentStep === 0){
+      current = 1;
+    }else{
+      current = 2;
+    }
+
+  }else{
+
+    total = steps.length;
+    current = currentStep + 1;
+
+  }
 
   progressFill.style.width = `${(current / total) * 100}%`;
   progressText.textContent = `${current} / ${total}`;
 
   prevBtn.classList.toggle("hidden", currentStep === 0);
-  nextBtn.classList.toggle("hidden", currentStep === total - 1);
-  submitBtn.classList.toggle("hidden", currentStep !== total - 1);
+  
+  const isSizeStep = currentStep === 9;
+
+    if(isPolycarbonateFlow()){
+
+        nextBtn.classList.toggle("hidden", isSizeStep);
+        submitBtn.classList.toggle("hidden", !isSizeStep);
+
+        }else{
+
+        nextBtn.classList.toggle("hidden", currentStep === steps.length - 1);
+        submitBtn.classList.toggle("hidden", currentStep !== steps.length - 1);
+
+    }
+
 }
 
-function getFormDataObject() {
-  const fd = new FormData(form);
+
+function buildPayload() {
+  const formData = new FormData(form);
+
+  const surface = formData.get("surface");
+
+  if (surface === "polycarbonate") {
+    return {
+      session_id: sessionId,
+      surface: "polycarbonate",
+      width_cm: Number(formData.get("width_cm")),
+      height_cm: formData.get("height_cm") ? Number(formData.get("height_cm")) : null,
+      window_type: "other",
+      glass_type: "unknown",
+      install_side: "unknown",
+      main_goal: "heat",
+      reflectivity_tolerance: "not_mirror",
+      brightness_preference: "medium",
+      privacy_level: "none",
+      allow_diy: true,
+      interior_reflection_sensitive: false
+    };
+  }
+
   return {
     session_id: sessionId,
-    surface: fd.get("surface"),
-    window_type: fd.get("window_type"),
-    glass_type: fd.get("glass_type"),
-    install_side: fd.get("install_side"),
-    main_goal: fd.get("main_goal"),
-    reflectivity_tolerance: fd.get("reflectivity_tolerance"),
-    brightness_preference: fd.get("brightness_preference"),
-    privacy_level: fd.get("privacy_level") || "none",
-    safety_need: fd.get("safety_need"),
-    width_cm: Number(fd.get("width_cm")),
-    height_cm: fd.get("height_cm") ? Number(fd.get("height_cm")) : null,
-    allow_diy: fd.get("allow_diy") === "on",
-    interior_reflection_sensitive: fd.get("interior_reflection_sensitive") === "true",
+    surface: formData.get("surface"),
+    window_type: formData.get("window_type"),
+    glass_type: formData.get("glass_type"),
+    install_side: formData.get("install_side"),
+    main_goal: formData.get("main_goal"),
+    privacy_level: formData.get("privacy_level"),
+    reflectivity_tolerance: formData.get("reflectivity_tolerance"),
+    brightness_preference: formData.get("brightness_preference"),
+    interior_reflection_sensitive: formData.get("interior_reflection_sensitive") === "true",
+    width_cm: Number(formData.get("width_cm")),
+    height_cm: formData.get("height_cm") ? Number(formData.get("height_cm")) : null,
+    allow_diy: true
   };
 }
 
@@ -93,37 +158,22 @@ function validateCurrentStep() {
   return true;
 }
 
-async function savePartial() {
-  const answers = getFormDataObject();
-
-  const payload = {
-    session_id: sessionId,
-    surface: answers.surface || null,
-    window_type: answers.window_type || null,
-    glass_type: answers.glass_type || null,
-    install_side: answers.install_side || null,
-    width_cm: answers.width_cm || null,
-    height_cm: answers.height_cm || null,
-    privacy_required: ["daytime", "day_night", "decor"].includes(answers.privacy_level),
-    reflectivity_preference:
-      answers.reflectivity_tolerance === "mirror_ok" ? "mirror" :
-      answers.reflectivity_tolerance ? "neutral" : null,
-    result_count: null
-  };
-
-  await fetch("/wizard/session/save", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  });
-}
-
 
 nextBtn.addEventListener("click", async () => {
+    if (currentStep === 0 && isPolycarbonateFlow()) {
 
-  if (!validateCurrentStep()) {
+    hideGlassSteps();
+
+    showStep(9);
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
     return;
-  }
+    }
+
+    if (!validateCurrentStep()) {
+        return;
+    }
 
   showStep(currentStep + 1);
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -134,7 +184,12 @@ prevBtn.addEventListener("click", () => {
 
   resultSection.classList.add("hidden");
 
-  showStep(currentStep - 1);
+  if(isPolycarbonateFlow() && currentStep === 9){
+      showStep(0);
+  } else {
+      showStep(currentStep - 1);
+  }
+
   window.scrollTo({ top: 0, behavior: "smooth" });
 
 });
@@ -144,7 +199,7 @@ form.addEventListener("submit", async (e) => {
 
   if (!validateCurrentStep()) return;
 
-  const payload = getFormDataObject();
+  const payload = buildPayload();
   lastAnswers = payload;
 
   submitBtn.disabled = true;
@@ -177,29 +232,6 @@ form.addEventListener("submit", async (e) => {
     overlay.classList.add("hidden");
   }
 });
-
-function renderResults(data){
-
-    const results = Array.isArray(data.results) ? data.results : [];
-    const container = document.getElementById("resultCards");
-
-    if(results.length === 0){
-
-    container.innerHTML = `
-    <div class="lead-box">
-
-    <h3>Nincs pontos egyezés</h3>
-
-    <p>
-    ${data.failure_reason || 
-    "Nem találtunk minden feltételnek megfelelő fóliát."}
-    </p>
-
-    </div>
-    `;
-
-    return;
-}
 
 const perfect = results.filter(r => r.exact_match);
 const recommended = results.filter(r => !r.exact_match);
@@ -265,7 +297,6 @@ html += `
 </section>
 `;
 
-}
 
 container.innerHTML = html;
 
@@ -340,38 +371,40 @@ function renderCard(item){
 
 }
 
-leadForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
+if (leadForm) {
+    leadForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  if (submitBtn.disabled) return;
+    if (submitBtn.disabled) return;
 
-  if (!validateCurrentStep()) return;
+    if (!validateCurrentStep()) return;
 
-  if (!sessionId) {
-    leadMessage.textContent = "Előbb kérlek futtasd le az ajánlót.";
-    return;
-  }
+    if (!sessionId) {
+        leadMessage.textContent = "Előbb kérlek futtasd le az ajánlót.";
+        return;
+    }
 
-  try {
-    const res = await fetch("/wizard/lead", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        session_id: sessionId,
-        email: leadEmail.value,
-        name: leadName.value || null
-      })
-    });
+    try {
+        const res = await fetch("/wizard/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            session_id: sessionId,
+            email: leadEmail.value,
+            name: leadName.value || null
+        })
+        });
 
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.detail || "Nem sikerült elküldeni.");
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || "Nem sikerült elküldeni.");
 
-    leadMessage.textContent = "Köszönjük! Rögzítettük az email címedet.";
-    leadForm.reset();
-  } catch (err) {
-    leadMessage.textContent = err.message || "Hiba történt az elküldésnél.";
-  }
-});
+        leadMessage.textContent = "Köszönjük! Rögzítettük az email címedet.";
+        leadForm.reset();
+    } catch (err) {
+        leadMessage.textContent = err.message || "Hiba történt az elküldésnél.";
+    }
+    }); 
+}
 
 function escapeHtml(value) {
   return String(value || "")
@@ -401,9 +434,22 @@ function matchLabel(item){
 }
 
 
+function getSelectedSurface() {
+  return document.querySelector('input[name="surface"]:checked')?.value;
+}
+
+function isPolycarbonateFlow() {
+  return getSelectedSurface() === "polycarbonate";
+}
+
 function stars(n){
     return "★".repeat(n) + "☆".repeat(5-n);
 }
+
+document.querySelectorAll('input[name="surface"]').forEach(el=>{
+  el.addEventListener("change", hideGlassSteps);
+});
+
 
 (async function init() {
   showStep(0);

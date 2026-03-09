@@ -46,64 +46,66 @@ class WizardSessionUpsert(BaseModel):
     reflectivity_preference: Optional[str] = None
     result_count: Optional[int] = None
 
-
 class WizardRequest(BaseModel):
     session_id: Optional[str] = None
 
     surface: Literal["glass", "polycarbonate"]
-    window_type: Literal[
+
+    window_type: Optional[Literal[
         "normal",
         "roof",
         "skylight",
         "winter_garden",
         "storefront",
         "other"
-    ]
-    glass_type: Literal[
+    ]] = "normal"
+
+    glass_type: Optional[Literal[
         "single",
         "double",
         "double_low_e",
         "triple_low_e",
         "unknown"
-    ]
-    install_side: Literal[
+    ]] = "unknown"
+
+    install_side: Optional[Literal[
         "inside",
         "outside",
         "both",
         "unknown"
-    ]
+    ]] = "unknown"
 
     width_cm: int = Field(ge=1, le=500)
     height_cm: Optional[int] = Field(default=None, ge=1, le=500)
 
-    main_goal: Literal[
+    main_goal: Optional[Literal[
         "heat",
         "heat_privacy",
         "privacy",
         "heat_safety",
         "winter_insulation",
         "surface_protection"
-    ]
+    ]] = "heat"
 
-    reflectivity_tolerance: Literal[
+    reflectivity_tolerance: Optional[Literal[
         "mirror_ok",
         "slightly",
         "not_mirror",
         "almost_invisible"
-    ]
+    ]] = "not_mirror"
 
-    brightness_preference: Literal[
+    brightness_preference: Optional[Literal[
         "very_bright",
         "medium",
         "darker_ok"
-    ]
+    ]] = "medium"
 
-    privacy_level: Literal[
+    privacy_level: Optional[Literal[
         "none",
         "daytime",
         "day_night",
         "decor"
-    ]
+    ]] = "none"
 
     safety_need: Optional[Literal[
         "none",
@@ -113,10 +115,8 @@ class WizardRequest(BaseModel):
         "heat_safety"
     ]] = None
 
-
     allow_diy: bool = True
     interior_reflection_sensitive: Optional[bool] = False
-
 
 class WizardLeadRequest(BaseModel):
     session_id: str
@@ -127,6 +127,90 @@ class WizardLeadRequest(BaseModel):
 # -------------------------
 # HELPERS
 # -------------------------
+
+
+def polycarbonate_summary(result_count: int, width_cm: int, height_cm: Optional[int]) -> str:
+    size_text = f"{width_cm} cm széles"
+    if height_cm:
+        size_text += f", kb. {height_cm} cm magas"
+
+    return f"""
+<div class="wizard-summary">
+<h3>A megadott igényed</h3>
+<ul class="wizard-summary-list">
+<li><strong>📐 Felület:</strong> Polikarbonát vagy plexi felület</li>
+<li><strong>📏 Méret:</strong> {size_text}</li>
+</ul>
+
+<h3>🎯 Az eredmény</h3>
+<p>
+<strong>{result_count}</strong> polikarbonáthoz ajánlható fóliát találtunk.
+</p>
+</div>
+"""
+
+def get_polycarbonate_products(width_cm: int):
+    query = f"""
+    SELECT
+      p.product_id,
+      p.sku,
+      p.name,
+      p.brand,
+      p.family,
+      p.image_url,
+      p.product_url,
+      p.roll_width_cm,
+      ps.tsers AS tser,
+      ps.visible_light_transmission,
+      ps.visible_light_reflection_ext,
+      ps.visible_light_reflection_int
+    FROM `{PROJECT_ID}.{DATASET_ID}.products` p
+    LEFT JOIN `{PROJECT_ID}.{DATASET_ID}.product_specs` ps
+      ON p.film_type = ps.product_id
+    WHERE
+      'polycarbonate' IN UNNEST(p.film_features)
+      AND p.roll_width_cm >= @width_cm
+    ORDER BY p.roll_width_cm ASC, p.name
+    """
+
+    job = bq.query(
+        query,
+        job_config=bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("width_cm", "INT64", width_cm),
+            ]
+        )
+    )
+
+    rows = list(job.result())
+    result = []
+
+    for i, r in enumerate(rows):
+        result.append({
+            "sku": r.sku,
+            "name": r.name,
+            "brand": r.brand,
+            "family": r.family,
+            "image": r.image_url,
+            "url": r.product_url,
+            "score": 100 - i,
+            "tser": r.tser,
+            "vlt": r.visible_light_transmission,
+            "reflect_ext": r.visible_light_reflection_ext,
+            "reflect_int": r.visible_light_reflection_int,
+            "heat_stars": heat_match(r.tser) if r.tser is not None else 4,
+            "light_stars": light_match(r.visible_light_transmission, "medium") if r.visible_light_transmission is not None else 4,
+            "privacy_stars": privacy_match(r.visible_light_reflection_ext) if r.visible_light_reflection_ext is not None else 1,
+            "exact_match": True,
+            "match_type": "perfect",
+            "badges": [
+                {"ok": True, "label": "Polikarbonáthoz ajánlott"},
+                {"ok": True, "label": "Hővédő megoldás"},
+            ],
+            "is_recommended": i == 0,
+        })
+
+    return result
 
 def load_query() -> str:
     return QUERY_FILE.read_text(encoding="utf-8")
@@ -332,11 +416,6 @@ def human_summary(data: WizardRequest, result_count: int) -> str:
 </div>
 """
 
-def insert_wizard_session(row: dict) -> None:
-    errors = bq.insert_rows_json(WIZARD_SESSIONS_TABLE, [row])
-    if errors:
-        raise RuntimeError(f"BigQuery insert error: {errors}")
-
 
 def merge_wizard_session(payload: WizardSessionUpsert) -> None:
     query = f"""
@@ -433,6 +512,77 @@ def wizard_session_save(data: WizardSessionUpsert):
 @app.post("/wizard")
 def wizard(data: WizardRequest):
     session_id = data.session_id or str(uuid.uuid4())
+
+    if data.surface == "polycarbonate":
+        result = get_polycarbonate_products(data.width_cm)
+        summary = polycarbonate_summary(len(result), data.width_cm, data.height_cm)
+
+        merge_wizard_session(
+            WizardSessionUpsert(
+                session_id=session_id,
+                surface=data.surface,
+                window_type="other",
+                glass_type="unknown",
+                install_side="unknown",
+                width_cm=data.width_cm,
+                height_cm=data.height_cm,
+                privacy_required=False,
+                reflectivity_preference="polycarbonate",
+                result_count=len(result),
+            )
+        )
+
+    bq.query(
+        f"""
+        MERGE `{WIZARD_SESSIONS_TABLE}` T
+        USING (
+            SELECT
+                @session_id AS session_id,
+                @answers AS answers_json,
+                @results AS results_json,
+                @summary AS summary
+        ) S
+        ON T.session_id = S.session_id
+
+        WHEN MATCHED THEN
+            UPDATE SET
+                answers_json = S.answers_json,
+                results_json = S.results_json,
+                summary = S.summary
+
+        WHEN NOT MATCHED THEN
+            INSERT (session_id, answers_json, results_json, summary, created_at)
+            VALUES (S.session_id, S.answers_json, S.results_json, S.summary, CURRENT_TIMESTAMP())
+        """,
+        job_config=bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter(
+                    "answers", "STRING", json.dumps(data.model_dump())
+                ),
+                bigquery.ScalarQueryParameter(
+                    "results", "STRING", json.dumps(result, ensure_ascii=False)
+                ),
+                bigquery.ScalarQueryParameter(
+                    "summary", "STRING", summary
+                ),
+                bigquery.ScalarQueryParameter(
+                    "session_id", "STRING", session_id
+                ),
+            ]
+        ),
+    ).result()
+
+    failure_reason = None
+    if len(result) == 0:
+        failure_reason = "Jelenleg nincs olyan polikarbonát fólia, amely megfelelő szélességben elérhető."
+
+    return {
+        "session_id": session_id,
+        "summary": summary,
+        "answers": data.model_dump(),
+        "results": result,
+        "failure_reason": failure_reason,
+    }
 
     
     priorities = build_priorities(data)
