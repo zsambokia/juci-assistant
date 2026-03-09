@@ -1,3 +1,5 @@
+#wizard_query.sql
+
 WITH wizard_input AS (
   SELECT
     @surface AS surface,
@@ -12,25 +14,45 @@ WITH wizard_input AS (
 
     @allow_diy AS allow_diy,
     @reflectivity_preference AS reflectivity_preference,
-    @privacy_required AS privacy_required
+    @privacy_required AS privacy_required,
+    @safety_required AS safety_required
 ),
 
 filtered_products AS (
   SELECT
     p.*,
+
+    ps.tsers,
+    ps.visible_light_transmission,
+    ps.visible_light_reflection_ext,
+    ps.visible_light_reflection_int,
+
     r.heat_comfort_score,
     r.privacy_score,
     r.natural_light_score,
-    r.visible_light_reflection_ext,
+
     w.*
+
   FROM `folias-juci.assistant.product_ranking` r
+
   JOIN `folias-juci.assistant.products` p
     ON r.product_id = p.product_id
+
+  LEFT JOIN `folias-juci.assistant.product_specs` ps
+    ON p.film_type = ps.product_id
+
   JOIN `folias-juci.assistant.product_glass_compatibility` g
     ON p.product_id = g.product_id
+
   CROSS JOIN wizard_input w
+
   WHERE
     p.surface = w.surface
+
+    AND (
+      w.safety_required = FALSE
+      OR 'security' IN UNNEST(p.film_features)
+    )
 
     AND (
       w.glass_type = 'unknown'
@@ -54,32 +76,48 @@ filtered_products AS (
       w.window_type != 'roof'
       OR p.roof_window_safe = TRUE
     )
-
-    AND (
-      w.reflectivity_preference = 'any'
-      OR (
-        w.reflectivity_preference = 'mirror'
-        AND r.visible_light_reflection_ext >= 15
-      )
-      OR (
-        w.reflectivity_preference = 'neutral'
-        AND r.visible_light_reflection_ext < 15
-      )
-    )
-
-    AND (
-      w.privacy_required = FALSE
-      OR r.privacy_score >= 20
-    )
 ),
+
 
 scored_products AS (
   SELECT
     *,
+   CASE
+    WHEN
+      (
+        reflectivity_preference = 'any'
+        OR (
+          reflectivity_preference = 'mirror'
+          AND visible_light_reflection_ext >= 15
+        )
+        OR (
+          reflectivity_preference = 'neutral'
+          AND visible_light_reflection_ext < 15
+        )
+      )
+
+      AND (
+        privacy_required = FALSE
+        OR privacy_score >= 20
+      )
+
+      AND (
+        heat_comfort_score >= 55
+      )
+
+      AND (
+        safety_required = FALSE
+        OR 'security' IN UNNEST(film_features)
+      )
+
+    THEN TRUE
+    ELSE FALSE
+    END AS exact_match,
+
     (
-      heat_comfort_score * heat_priority +
-      privacy_score * privacy_priority +
-      natural_light_score * light_priority
+      COALESCE(heat_comfort_score,0) * heat_priority +
+      COALESCE(privacy_score,0) * privacy_priority +
+      COALESCE(natural_light_score,0) * light_priority
     ) / (heat_priority + privacy_priority + light_priority) AS final_score
   FROM filtered_products
 )
@@ -92,7 +130,41 @@ SELECT
   family,
   image_url,
   product_url,
+
+  -- ⭐ fizikai értékek
+  tsers AS tser,
+  visible_light_transmission,
+  visible_light_reflection_ext,
+  visible_light_reflection_int,
+
+
+  exact_match,
+
+  CASE
+    WHEN exact_match THEN 'perfect'
+    ELSE 'recommended'
+  END AS match_type,
+
+
+  -- ⭐ Hővédelem csillagok
+  CASE
+    WHEN heat_comfort_score >= 75 THEN '⭐⭐⭐⭐⭐ Kiváló'
+    WHEN heat_comfort_score >= 65 THEN '⭐⭐⭐⭐ Nagyon jó'
+    WHEN heat_comfort_score >= 55 THEN '⭐⭐⭐ Jó'
+    WHEN heat_comfort_score >= 45 THEN '⭐⭐ Közepes'
+    ELSE '⭐ Alap'
+  END AS heat_rating,
+
+  -- 👁 Belátásvédelem
+  CASE
+    WHEN visible_light_reflection_ext >= 45 THEN 'Erős'
+    WHEN visible_light_reflection_ext >= 25 THEN 'Közepes'
+    WHEN visible_light_reflection_ext >= 15 THEN 'Enyhe'
+    ELSE 'Nincs'
+  END AS privacy_level,
+
   final_score
+
 FROM (
   SELECT
     *,
@@ -102,6 +174,7 @@ FROM (
     ) AS rn
   FROM scored_products
 )
+
 WHERE rn = 1
-ORDER BY final_score DESC
+ORDER BY exact_match DESC, final_score DESC
 LIMIT 5

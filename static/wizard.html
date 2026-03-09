@@ -70,19 +70,28 @@
         </section>
 
         <section class="step" data-step="5">
-          <h2>5. Mit szeretnél még a hővédelem mellett?</h2>
-          <p class="help">Itt mondd meg, mi zavar a legjobban most: meleg, belátás, biztonság, vagy inkább téli komfort.</p>
-          <div class="options">
-            <label class="option-card"><input type="radio" name="main_goal" value="heat" required><span>Hővédelem</span></label>
-            <label class="option-card"><input type="radio" name="main_goal" value="heat_privacy"><span>Hővédelem + belátásvédelem</span></label>
-            <label class="option-card"><input type="radio" name="main_goal" value="privacy"><span>Belátásvédelem</span></label>
-            <label class="option-card"><input type="radio" name="main_goal" value="heat_safety"><span>Hővédelem + biztonság</span></label>
-            <label class="option-card"><input type="radio" name="main_goal" value="surface_protection"><span>Felületvédelem / vandalizmus ellen</span></label>
-          </div>
+        <h2>5. Milyen extra funkció fontos még a hővédelem mellett?</h2>
+        <p class="help">A hővédelem az alap. Itt azt jelöld, kérsz-e emellett plusz funkciót is.</p>
+        <div class="options">
+            <label class="option-card"><input type="radio" name="main_goal" value="heat" required><span>Nem fontos más extra</span></label>
+            <label class="option-card"><input type="radio" name="main_goal" value="heat_privacy"><span>Belátás / Kilátás elleni védelem</span></label>
+            <label class="option-card"><input type="radio" name="main_goal" value="heat_safety"><span>Biztonsági védelem (szilánk / betörés lassítás)</span></label>
+        </div>
         </section>
 
         <section class="step" data-step="6">
-          <h2>6. Mennyire lehet tükrös?</h2>
+            <h2>6. Milyen belátásvédelem kell?</h2>
+            <p class="help">Fontos: a legtöbb tükrös fólia főleg nappal működik erősebben. Az éjjeli takaráshoz külön megoldás is kellhet.</p>
+            <div class="options">
+                <label class="option-card"><input type="radio" name="privacy_level" value="none"><span>Nem fontos</span></label>
+                <label class="option-card"><input type="radio" name="privacy_level" value="daytime"><span>Csak nappal</span></label>
+                <label class="option-card"><input type="radio" name="privacy_level" value="day_night"><span>Éjjel-nappal</span></label>
+                <label class="option-card"><input type="radio" name="privacy_level" value="decor"><span>Részleges / dekor</span></label>
+            </div>
+        </section>
+
+        <section class="step" data-step="7">
+          <h2>7. Mennyire lehet tükrös?</h2>
           <p class="help">Van, akit egyáltalán nem zavar a tükrös hatás, más inkább minél természetesebb üveget szeretne.</p>
           <div class="options">
             <label class="option-card"><input type="radio" name="reflectivity_tolerance" value="mirror_ok" required><span>Nem gond, lehet tükrös</span></label>
@@ -91,9 +100,29 @@
             <label class="option-card"><input type="radio" name="reflectivity_tolerance" value="almost_invisible"><span>Szinte láthatatlan legyen</span></label>
           </div>
         </section>
+        
+        <section class="step" data-step="8">
+            <h2>8. Zavar, ha a fólia belülről tükröződik?</h2>
+            <p class="help">
+                Egyes hővédő fóliák nappal kifelé tükröznek, de bizonyos fényviszonyoknál
+                belülről is lehet enyhe tükörhatás.
+            </p>
 
-        <section class="step" data-step="7">
-          <h2>7. Mennyire maradjon világos bent?</h2>
+            <div class="options">
+                <label class="option-card">
+                <input type="radio" name="interior_reflection_sensitive" value="false" required>
+                <span>Nem zavar</span>
+                </label>
+
+                <label class="option-card">
+                <input type="radio" name="interior_reflection_sensitive" value="true">
+                <span>Igen, inkább természetes üveg hatást szeretnék</span>
+                </label>
+            </div>
+            </section>
+
+        <section class="step" data-step="9">
+          <h2>9. Mennyire maradjon világos bent?</h2>
           <p class="help">Ezzel azt lövöd be, hogy mennyire fontos a természetes fény megtartása.</p>
           <div class="options">
             <label class="option-card"><input type="radio" name="brightness_preference" value="very_bright" required><span>Minél világosabb</span></label>
@@ -102,29 +131,7 @@
           </div>
         </section>
 
-        <section class="step" data-step="8">
-          <h2>8. Milyen belátásvédelem kell?</h2>
-          <p class="help">Fontos: a legtöbb tükrös fólia főleg nappal működik erősebben. Az éjjeli takaráshoz külön megoldás is kellhet.</p>
-          <div class="options">
-            <label class="option-card"><input type="radio" name="privacy_level" value="none" required><span>Nem fontos</span></label>
-            <label class="option-card"><input type="radio" name="privacy_level" value="daytime"><span>Csak nappal</span></label>
-            <label class="option-card"><input type="radio" name="privacy_level" value="day_night"><span>Éjjel-nappal</span></label>
-            <label class="option-card"><input type="radio" name="privacy_level" value="decor"><span>Részleges / dekor</span></label>
-          </div>
-        </section>
-
-        <section class="step" data-step="9">
-          <h2>9. Kell extra biztonság vagy védelem?</h2>
-          <p class="help">Ha csak hővédelem kell, válaszd a „Nem” opciót. Ha szilánkvédelem vagy vandálbiztosabb megoldás kell, itt jelezd.</p>
-          <div class="options">
-            <label class="option-card"><input type="radio" name="safety_need" value="none" required><span>Nem</span></label>
-            <label class="option-card"><input type="radio" name="safety_need" value="shatter"><span>Szilánkvédelem</span></label>
-            <label class="option-card"><input type="radio" name="safety_need" value="anti_burglary"><span>Betöréslassítás</span></label>
-            <label class="option-card"><input type="radio" name="safety_need" value="anti_graffiti"><span>Graffiti / karc / sav ellen</span></label>
-            <label class="option-card"><input type="radio" name="safety_need" value="heat_safety"><span>Hővédelem + biztonság</span></label>
-          </div>
-        </section>
-
+       
         <section class="step" data-step="10">
           <h2>10. Mekkora felületre keresel fóliát?</h2>
           <p class="help">A szélesség különösen fontos, mert csak olyan fóliát ajánlunk, ami méretben is passzolhat.</p>
@@ -142,10 +149,7 @@
 
           
 
-          <div class="checks">
-            <label><input type="checkbox" name="allow_diy" checked /> Saját kezűleg is felrakható megoldás is jöhet</label>
-            <label><input type="checkbox" name="interior_reflection_sensitive" /> Zavar, ha belülről tükröződik</label>
-          </div>
+        
         </section>
 
         <div class="wizard-actions">

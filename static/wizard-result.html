@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ajánlott ablakfóliák</title>
+
+<link rel="stylesheet" href="/static/wizard.css" />
+
+</head>
+
+<body>
+
+<div class="wizard-shell">
+
+<div class="wizard-card">
+
+<div class="hero">
+<div class="badge">Fóliás Juci ajánló</div>
+
+<h1>A neked ajánlott fóliák</h1>
+
+<p id="summaryText"></p>
+
+</div>
+
+<div id="resultCards" class="result-cards"></div>
+
+</div>
+
+</div>
+
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+const sessionId = params.get("session");
+
+async function loadResults(){
+
+  const res = await fetch("/wizard/result?session=" + sessionId);
+  const data = await res.json();
+
+  document.getElementById("summaryText").innerHTML = data.summary;
+
+  renderResults(data);
+}
+
+
+function renderResults(data){
+
+    const results = Array.isArray(data.results) ? data.results : [];
+    const container = document.getElementById("resultCards");
+
+    if(results.length === 0){
+
+    container.innerHTML = `
+    <div class="lead-box">
+
+    <h3>Nincs pontos egyezés</h3>
+
+    <p>
+    ${data.failure_reason || 
+    "Nem találtunk minden feltételnek megfelelő fóliát."}
+    </p>
+
+    <div class="tip-box">
+    <strong>Mit javaslunk?</strong>
+    <ul>
+    <li>Próbáld meg külső telepítéssel</li>
+    <li>Engedj egy kicsit a világosságból</li>
+    <li>Nézd meg a közeli alternatívákat</li>
+    </ul>
+    </div>
+
+    </div>
+    `;
+
+    return;
+}
+
+const perfect = results.filter(r => r.exact_match);
+const recommended = results.filter(r => !r.exact_match);
+
+let html = "";
+
+
+/* =========================
+   PERFECT
+========================= */
+
+if(perfect.length){
+
+html += `
+<section class="result-section perfect">
+
+<h2 class="section-title">
+⭐ Kiemelt ajánlataink
+</h2>
+
+<p class="section-sub">
+Ezek a fóliák teljesen megfelelnek az igényeidnek.
+</p>
+
+<div class="result-grid">
+`;
+
+html += perfect.map(renderCard).join("");
+
+html += `
+</div>
+</section>
+`;
+
+}
+
+
+/* =========================
+   RECOMMENDED
+========================= */
+
+if(recommended.length){
+
+html += `
+<section class="result-section recommended">
+
+<h2 class="section-title secondary">
+⚪ Nem minden igényedhez igazodik, de érdekelhet
+</h2>
+
+<p class="section-sub">
+Ezek a fóliák közel állnak az igényeidhez,
+de egy-két feltételben eltérnek.
+</p>
+
+<div class="result-grid">
+`;
+
+html += recommended.map(renderCard).join("");
+
+html += `
+</div>
+</section>
+`;
+
+}
+
+container.innerHTML = html;
+
+}
+
+function renderCard(item){
+
+    return `
+    <article class="result-card ${item.exact_match ? "perfect-card" : ""}">
+
+    ${item.is_recommended
+    ? `<div class="juci-pick">⭐ Fóliás Juci ajánlása</div>`
+    : ``}
+
+    <div class="card-image">
+
+    ${item.image
+    ? `<img src="${item.image}" alt="${item.name}">`
+    : `<div class="img-placeholder"></div>`
+    }
+
+    </div>
+
+    <div class="result-body">
+
+    <h3>${item.name}</h3>
+
+    <div class="result-meta">
+
+    <span class="pill">Cikkszám: ${item.sku}</span>
+    <span class="pill">${item.family}</span>
+
+    <span class="match-badge">
+    ${matchLabel(item)}
+    </span>
+
+    </div>
+
+
+    <div class="spec-grid">
+
+    <div class="spec">
+    <div class="label">Hővédelem</div>
+    <div class="stars">${stars(item.heat_stars)}</div>
+    <div class="value">${item.tser}%</div>
+    </div>
+
+    <div class="spec">
+    <div class="label">Fényáteresztés</div>
+    <div class="stars">${stars(item.light_stars)}</div>
+    <div class="value">${item.vlt}%</div>
+    </div>
+
+    <div class="spec">
+    <div class="label">Belátásvédelem</div>
+    <div class="stars">${stars(item.privacy_stars)}</div>
+    <div class="value">${item.reflect_ext}%</div>
+    </div>
+
+    </div>
+
+
+    <div class="badge-list">
+    ${(item.badges || [])
+    .filter(Boolean)
+    .map(b => `
+    <span class="badge ${b.ok ? "ok":"warn"}">
+    ${b.ok ? "✓":"⚠"} ${b.label}
+    </span>
+    `).join("")}
+    </div>
+
+    <a class="result-link"
+    href="${item.url}"
+    target="_blank">
+
+    Megnézem a terméket
+
+    </a>
+
+    </div>
+
+    </article>
+    `;
+}
+
+loadResults();
+
+
+function matchLabel(item){
+
+if(item.exact_match){
+return "🏆 Tökéletes választás";
+}
+
+if(item.score > 50){
+return "👍 Majdnem tökéletes";
+}
+
+if(item.score > 40){
+return "🙂 Jó alternatíva";
+}
+
+return "ℹ Megfontolható";
+
+}
+
+
+function stars(n){
+  return "★".repeat(n) + "☆".repeat(5-n);
+}
+
+
+</script>
+
+
+</body>
+</html>

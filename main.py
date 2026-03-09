@@ -1,3 +1,5 @@
+#main.py
+
 from __future__ import annotations
 
 import json
@@ -103,17 +105,17 @@ class WizardRequest(BaseModel):
         "decor"
     ]
 
-    safety_need: Literal[
+    safety_need: Optional[Literal[
         "none",
         "shatter",
         "anti_burglary",
         "anti_graffiti",
         "heat_safety"
-    ]
+    ]] = None
 
 
     allow_diy: bool = True
-    interior_reflection_sensitive: bool = False
+    interior_reflection_sensitive: Optional[bool] = False
 
 
 class WizardLeadRequest(BaseModel):
@@ -206,54 +208,129 @@ def build_reflectivity_preference(data: WizardRequest) -> str:
     }
     return mapping[data.reflectivity_tolerance]
 
+def light_match(vlt, preference):
+
+    if preference == "very_bright":
+        if vlt >= 60:
+            return 5
+        elif vlt >= 45:
+            return 4
+        elif vlt >= 30:
+            return 3
+        elif vlt >= 20:
+            return 2
+        else:
+            return 1
+
+    if preference == "medium":
+        if vlt >= 45:
+            return 5
+        elif vlt >= 30:
+            return 4
+        elif vlt >= 20:
+            return 3
+        else:
+            return 2
+
+    if preference == "darker_ok":
+        if vlt >= 20:
+            return 5
+        elif vlt >= 10:
+            return 4
+        else:
+            return 3
+
+def heat_match(tser):
+
+    if tser >= 80:
+        return 5
+    if tser >= 70:
+        return 4
+    if tser >= 60:
+        return 3
+    if tser >= 50:
+        return 2
+    return 1
+
+def privacy_match(reflection_ext):
+
+    if reflection_ext >= 50:
+        return 5
+    if reflection_ext >= 35:
+        return 4
+    if reflection_ext >= 20:
+        return 3
+    if reflection_ext >= 10:
+        return 2
+    return 1
 
 def human_summary(data: WizardRequest, result_count: int) -> str:
+
     surface_map = {
-        "glass": "üvegfelületre",
-        "polycarbonate": "polikarbonát vagy plexi felületre",
+        "glass": "Üvegfelület",
+        "polycarbonate": "Polikarbonát vagy plexi felület",
     }
+
     window_map = {
-        "normal": "normál függőleges ablakra",
-        "roof": "tetőtéri ablakra",
-        "skylight": "felülvilágítóra vagy üvegtetőre",
-        "winter_garden": "télikertre",
-        "storefront": "üvegfalra vagy kirakatra",
-        "other": "egyéb üvegfelületre",
+        "normal": "Normál függőleges ablak",
+        "roof": "Tetőtéri ablak",
+        "skylight": "Felülvilágító vagy üvegtető",
+        "winter_garden": "Télikert",
+        "storefront": "Üvegfal vagy kirakat",
+        "other": "Egyéb üvegfelület",
     }
+
     goal_map = {
-        "heat": "elsősorban hővédelmet",
-        "heat_privacy": "hővédelmet és belátásvédelmet",
-        "privacy": "elsősorban belátásvédelmet",
-        "heat_safety": "hővédelmet és extra védelmet",
-        "winter_insulation": "téli komfortjavítást",
-        "surface_protection": "felületvédelmet",
+        "heat": "Hővédelem",
+        "heat_privacy": "Hővédelem + belátásvédelem",
+        "privacy": "Belátásvédelem",
+        "heat_safety": "Hővédelem + extra védelem",
+        "winter_insulation": "Téli komfortjavítás",
+        "surface_protection": "Felületvédelem",
     }
+
     reflect_map = {
-        "mirror_ok": "a tükrösség nem zavar",
-        "slightly": "legfeljebb enyhén tükrös megoldást szeretnél",
-        "not_mirror": "nem szeretnél tükrös hatást",
-        "almost_invisible": "szinte láthatatlan megjelenést szeretnél",
+        "mirror_ok": "A tükrös hatás nem zavar",
+        "slightly": "Legfeljebb enyhén tükrös lehet",
+        "not_mirror": "Nem szeretnél tükrös hatást",
+        "almost_invisible": "Szinte láthatatlan megjelenést szeretnél",
     }
+
     light_map = {
-        "very_bright": "fontos, hogy minél világosabb maradjon",
-        "medium": "közepes sötétítés még rendben van",
-        "darker_ok": "az erősebb sötétítés is belefér",
+        "very_bright": "Fontos, hogy nagyon világos maradjon",
+        "medium": "Közepes sötétítés még rendben van",
+        "darker_ok": "Az erősebb sötétítés is belefér",
     }
+
     privacy_map = {
-        "none": "nem kértél külön belátásvédelmet",
-        "daytime": "nappali belátásvédelmet szeretnél",
-        "day_night": "erősebb, egész napos takarást keresel",
-        "decor": "részleges vagy dekor jellegű takarást is elfogadsz",
+        "none": "Nem szükséges belátásvédelem",
+        "daytime": "Nappali belátásvédelem",
+        "day_night": "Erős, egész napos belátásvédelem",
+        "decor": "Dekor vagy részleges takarás",
     }
 
-    return (
-        f"A válaszaid alapján {surface_map[data.surface]} keresel fóliát, "
-        f"{window_map[data.window_type]}. A fő célod {goal_map[data.main_goal]}, "
-        f"emellett {reflect_map[data.reflectivity_tolerance]}, és {light_map[data.brightness_preference]}. "
-        f"Belátásvédelem szempontjából az látszik, hogy {privacy_map[data.privacy_level]}. "
-        f"A megadott méret alapján {result_count} ajánlható fóliát találtunk."
-    )
+    return f"""
+<div class="wizard-summary">
 
+<h3>A megadott igényeid</h3>
+
+<ul class="wizard-summary-list">
+<li><strong>📐 Felület:</strong> {surface_map.get(data.surface)}</li>
+<li><strong>⊞  Ablak típusa:</strong> {window_map.get(data.window_type)}</li>
+<li><strong>🎯 Fő cél:</strong> {goal_map.get(data.main_goal)}</li>
+<li><strong>✨ Tükrösség:</strong> {reflect_map.get(data.reflectivity_tolerance)}</li>
+<li><strong>☀️ Fényáteresztés:</strong> {light_map.get(data.brightness_preference)}</li>
+<li><strong>👀 Belátásvédelem:</strong> {privacy_map.get(data.privacy_level)}</li>
+</ul>
+
+<h3>🎯 Az eredmény</h3>
+
+<p>
+<strong>{result_count}</strong> ajánlható fóliát találtunk a megadott feltételek alapján.
+</p>
+
+</div>
+"""
 
 def insert_wizard_session(row: dict) -> None:
     errors = bq.insert_rows_json(WIZARD_SESSIONS_TABLE, [row])
@@ -328,7 +405,7 @@ def health():
     return {"status": "ok"}
 
 
-@app.get("/wizard-ui")
+@app.get("/hovedo")
 def wizard_ui():
     return FileResponse(STATIC_DIR / "wizard.html")
 
@@ -340,12 +417,9 @@ def static_files(filename: str):
         raise HTTPException(status_code=404, detail="File not found")
     return FileResponse(file_path)
 
-
 @app.post("/wizard/session/start")
 def wizard_session_start():
-    session_id = str(uuid.uuid4())
-    merge_wizard_session(WizardSessionUpsert(session_id=session_id))
-    return {"session_id": session_id}
+    return {"session_id": str(uuid.uuid4())}
 
 
 @app.post("/wizard/session/save")
@@ -354,10 +428,13 @@ def wizard_session_save(data: WizardSessionUpsert):
     return {"ok": True, "session_id": data.session_id}
 
 
+
+
 @app.post("/wizard")
 def wizard(data: WizardRequest):
     session_id = data.session_id or str(uuid.uuid4())
 
+    
     priorities = build_priorities(data)
     reflectivity_preference = build_reflectivity_preference(data)
     privacy_required = (
@@ -365,13 +442,29 @@ def wizard(data: WizardRequest):
         or data.safety_need in {"shatter", "anti_burglary", "heat_safety"}
     )
 
+    safety_required = data.main_goal == "heat_safety"
+
     query = load_query()
 
     job_config = bigquery.QueryJobConfig(
         query_parameters=[
             bigquery.ScalarQueryParameter("surface", "STRING", normalize_surface(data.surface)),
             bigquery.ScalarQueryParameter("glass_type", "STRING", data.glass_type),
-            bigquery.ScalarQueryParameter("install_side", "STRING", data.install_side),
+            bigquery.ScalarQueryParameter(
+                "install_side",
+                "STRING",
+                {
+                    "inside": "interior",
+                    "outside": "exterior",
+                    "both": "both",
+                    "unknown": "both"
+                }.get(data.install_side, "both")
+            ),
+            bigquery.ScalarQueryParameter(
+                "safety_required",
+                "BOOL",
+                safety_required
+            ),
             bigquery.ScalarQueryParameter("window_type", "STRING", normalize_window_type(data.window_type)),
             bigquery.ScalarQueryParameter("window_width_cm", "INT64", data.width_cm),
 
@@ -384,11 +477,32 @@ def wizard(data: WizardRequest):
             bigquery.ScalarQueryParameter("privacy_required", "BOOL", privacy_required),
         ]
     )
-
+    
     rows = bq.query(query, job_config=job_config).result()
 
     result = []
+
     for r in rows:
+
+        badges = []
+
+        if r.heat_rating in ["⭐⭐⭐⭐⭐ Kiváló","⭐⭐⭐⭐ Nagyon jó","⭐⭐⭐ Jó"]:
+            badges.append({
+                "ok": True,
+                "label": "Erős hővédelem"
+            })
+
+        if r.privacy_level != "Nincs":
+            badges.append({
+                "ok": True,
+                "label": "Belátásvédelem"
+            })
+        else:
+            badges.append({
+                "ok": False,
+                "label": "Gyengébb belátásvédelem"
+            })
+
         result.append({
             "sku": r.sku,
             "name": r.name,
@@ -396,8 +510,27 @@ def wizard(data: WizardRequest):
             "family": r.family,
             "image": r.image_url,
             "url": r.product_url,
-            "score": float(r.final_score),
+            "score": float(r.final_score or 0),
+
+            "tser": r.tser,
+            "vlt": r.visible_light_transmission,
+            "reflect_ext": r.visible_light_reflection_ext,
+            "reflect_int": r.visible_light_reflection_int,
+
+            "heat_stars": heat_match(r.tser),
+            "light_stars": light_match(r.visible_light_transmission, data.brightness_preference),
+            "privacy_stars": privacy_match(r.visible_light_reflection_ext),
+
+            "exact_match": bool(r.exact_match),
+            "match_type": r.match_type,
+
+            "badges": badges
         })
+
+    # ⭐ itt jelöljük a legjobbat
+    if result:
+        best = max(result, key=lambda x: x["score"])
+        best["is_recommended"] = True
 
     merge_wizard_session(
         WizardSessionUpsert(
@@ -414,11 +547,70 @@ def wizard(data: WizardRequest):
         )
     )
 
+    summary = human_summary(data, len(result))
+
+    bq.query(
+        f"""
+        MERGE `{WIZARD_SESSIONS_TABLE}` T
+        USING (
+            SELECT
+                @session_id AS session_id,
+                @answers AS answers_json,
+                @results AS results_json,
+                @summary AS summary
+        ) S
+        ON T.session_id = S.session_id
+
+        WHEN MATCHED THEN
+            UPDATE SET
+                answers_json = S.answers_json,
+                results_json = S.results_json,
+                summary = S.summary
+
+        WHEN NOT MATCHED THEN
+            INSERT (session_id, answers_json, results_json, summary, created_at)
+            VALUES (S.session_id, S.answers_json, S.results_json, S.summary, CURRENT_TIMESTAMP())
+        """,
+        job_config=bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter(
+                    "answers", "STRING", json.dumps(data.model_dump())
+                ),
+                bigquery.ScalarQueryParameter(
+                    "results", "STRING", json.dumps(result, ensure_ascii=False)
+                ),
+                bigquery.ScalarQueryParameter(
+                    "summary", "STRING", summary
+                ),
+                bigquery.ScalarQueryParameter(
+                    "session_id", "STRING", session_id
+                ),
+            ]
+        ),
+    ).result()
+
+    failure_reason = None
+
+    if len(result) == 0:
+
+        if data.glass_type == "triple_low_e":
+            failure_reason = "A háromrétegű Low-E üveg miatt a legtöbb fólia nem telepíthető belülről."
+
+        elif data.brightness_preference == "very_bright":
+            failure_reason = "A nagyon világos megjelenés mellett nehéz erős hővédelmet és belátásvédelmet elérni."
+
+        elif data.privacy_level == "daytime":
+            failure_reason = "A nappali belátásvédelem általában sötétebb vagy tükrösebb fóliát igényel."
+
+        else:
+            failure_reason = "A megadott feltételek együtt túl szűk szűrést eredményeztek."
+
     return {
         "session_id": session_id,
-        "summary": human_summary(data, len(result)),
+        "summary": summary,
         "answers": data.model_dump(),
         "results": result,
+        "failure_reason": failure_reason,
     }
 
 
@@ -435,3 +627,43 @@ def wizard_lead(data: WizardLeadRequest):
         raise HTTPException(status_code=500, detail=str(errors))
 
     return {"ok": True}
+
+@app.get("/hovedo/eredmeny")
+def wizard_result_page():
+    return FileResponse(STATIC_DIR / "wizard-result.html")
+
+@app.get("/wizard/result")
+def wizard_result(session: str):
+
+    query = f"""
+    SELECT
+        results_json,
+        summary,
+        answers_json
+    FROM `{WIZARD_SESSIONS_TABLE}`
+    WHERE session_id = @session
+    LIMIT 1
+    """
+
+    job = bq.query(
+        query,
+        job_config=bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("session", "STRING", session)
+            ]
+        )
+    )
+
+    rows = list(job.result())
+
+    if not rows:
+        raise HTTPException(status_code=404, detail="Session not found")
+
+    row = rows[0]
+
+    return {
+        "session_id": session,
+        "summary": row.summary,
+        "answers": json.loads(row.answers_json) if row.answers_json else {},
+        "results": json.loads(row.results_json) if row.results_json else []
+    }
