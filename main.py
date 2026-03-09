@@ -532,57 +532,57 @@ def wizard(data: WizardRequest):
             )
         )
 
-    bq.query(
-        f"""
-        MERGE `{WIZARD_SESSIONS_TABLE}` T
-        USING (
-            SELECT
-                @session_id AS session_id,
-                @answers AS answers_json,
-                @results AS results_json,
-                @summary AS summary
-        ) S
-        ON T.session_id = S.session_id
+        bq.query(
+            f"""
+            MERGE `{WIZARD_SESSIONS_TABLE}` T
+            USING (
+                SELECT
+                    @session_id AS session_id,
+                    @answers AS answers_json,
+                    @results AS results_json,
+                    @summary AS summary
+            ) S
+            ON T.session_id = S.session_id
 
-        WHEN MATCHED THEN
-            UPDATE SET
-                answers_json = S.answers_json,
-                results_json = S.results_json,
-                summary = S.summary
+            WHEN MATCHED THEN
+                UPDATE SET
+                    answers_json = S.answers_json,
+                    results_json = S.results_json,
+                    summary = S.summary
 
-        WHEN NOT MATCHED THEN
-            INSERT (session_id, answers_json, results_json, summary, created_at)
-            VALUES (S.session_id, S.answers_json, S.results_json, S.summary, CURRENT_TIMESTAMP())
-        """,
-        job_config=bigquery.QueryJobConfig(
-            query_parameters=[
-                bigquery.ScalarQueryParameter(
-                    "answers", "STRING", json.dumps(data.model_dump())
-                ),
-                bigquery.ScalarQueryParameter(
-                    "results", "STRING", json.dumps(result, ensure_ascii=False)
-                ),
-                bigquery.ScalarQueryParameter(
-                    "summary", "STRING", summary
-                ),
-                bigquery.ScalarQueryParameter(
-                    "session_id", "STRING", session_id
-                ),
-            ]
-        ),
-    ).result()
+            WHEN NOT MATCHED THEN
+                INSERT (session_id, answers_json, results_json, summary, created_at)
+                VALUES (S.session_id, S.answers_json, S.results_json, S.summary, CURRENT_TIMESTAMP())
+            """,
+            job_config=bigquery.QueryJobConfig(
+                query_parameters=[
+                    bigquery.ScalarQueryParameter(
+                        "answers", "STRING", json.dumps(data.model_dump())
+                    ),
+                    bigquery.ScalarQueryParameter(
+                        "results", "STRING", json.dumps(result, ensure_ascii=False)
+                    ),
+                    bigquery.ScalarQueryParameter(
+                        "summary", "STRING", summary
+                    ),
+                    bigquery.ScalarQueryParameter(
+                        "session_id", "STRING", session_id
+                    ),
+                ]
+            ),
+        ).result()
 
-    failure_reason = None
-    if len(result) == 0:
-        failure_reason = "Jelenleg nincs olyan polikarbonát fólia, amely megfelelő szélességben elérhető."
+        failure_reason = None
+        if len(result) == 0:
+            failure_reason = "Jelenleg nincs olyan polikarbonát fólia, amely megfelelő szélességben elérhető."
 
-    return {
-        "session_id": session_id,
-        "summary": summary,
-        "answers": data.model_dump(),
-        "results": result,
-        "failure_reason": failure_reason,
-    }
+        return {
+            "session_id": session_id,
+            "summary": summary,
+            "answers": data.model_dump(),
+            "results": result,
+            "failure_reason": failure_reason,
+        }
 
     
     priorities = build_priorities(data)

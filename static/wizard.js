@@ -21,20 +21,37 @@ let currentStep = 0;
 let sessionId = null;
 let lastAnswers = null;
 
-function hideGlassSteps(){
 
-  if(!isPolycarbonateFlow()) return;
+function updateFlow(){
+
+  const poly = isPolycarbonateFlow();
 
   steps.forEach((step,i)=>{
+
     if(i > 0 && i < 9){
 
-      step.style.display = "none";
+      if(poly){
 
-      step.querySelectorAll("[required]").forEach(el=>{
-        el.required = false;
-      });
+        step.style.display = "none";
+
+        step.querySelectorAll("[required]").forEach(el=>{
+          el.required = false;
+        });
+
+      }else{
+
+        step.style.display = "";
+
+        step.querySelectorAll("input[type='radio']").forEach(el=>{
+          if(el.dataset.originalRequired === "true"){
+            el.required = true;
+          }
+        });
+
+      }
 
     }
+
   });
 
 }
@@ -162,7 +179,7 @@ function validateCurrentStep() {
 nextBtn.addEventListener("click", async () => {
     if (currentStep === 0 && isPolycarbonateFlow()) {
 
-    hideGlassSteps();
+    updateFlow();
 
     showStep(9);
 
@@ -233,143 +250,7 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
-const perfect = results.filter(r => r.exact_match);
-const recommended = results.filter(r => !r.exact_match);
 
-let html = "";
-
-
-/* =========================
-   ⭐ PERFECT MATCH
-========================= */
-
-if(perfect.length){
-
-html += `
-<section class="result-section perfect">
-
-<h2 class="section-title">
-⭐ Kiemelt ajánlataink
-</h2>
-
-<p class="section-sub">
-Ezek a fóliák a megadott igényeidhez a legjobban illeszkednek.
-</p>
-
-<div class="result-grid">
-`;
-
-html += perfect.map(renderCard).join("");
-
-html += `
-</div>
-</section>
-`;
-
-}
-
-
-/* =========================
-   ⚪ RECOMMENDED
-========================= */
-
-if(recommended.length){
-
-html += `
-<section class="result-section recommended">
-
-<h2 class="section-title secondary">
-⚪ Nem minden igényedhez igazodik, de érdekelhet
-</h2>
-
-<p class="section-sub">
-Ezek a fóliák közel állnak az igényeidhez,
-de egy-két feltételben eltérnek.
-</p>
-
-<div class="result-grid">
-`;
-
-html += recommended.map(renderCard).join("");
-
-html += `
-</div>
-</section>
-`;
-
-
-container.innerHTML = html;
-
-}
-
-function renderCard(item){
-
-    return `
-    <article class="result-card ${item.exact_match ? "perfect-card" : ""}">
-    ${item.is_recommended
-        ? `<div class="juci-pick">⭐ Fóliás Juci ajánlása</div>`
-    : ``}
-
-    <div class="card-image">
-
-    ${item.image
-    ? `<img src="${item.image}" alt="${item.name}">`
-    : `<div class="img-placeholder"></div>`
-    }
-
-    </div>
-
-    <div class="result-body">
-
-    <h3>${item.name}</h3>
-
-    <div class="result-meta">
-
-    <span class="pill">Cikkszám: ${item.sku}</span>
-    <span class="pill">${item.family}</span>
-
-    <span class="match-badge">
-    ${matchLabel(item)}
-    </span>
-
-    </div>
-
-    <div class="spec-grid">
-
-    <div class="spec">
-    <div class="label">Hővédelem</div>
-    <div class="stars">${stars(item.heat_stars)}</div>
-    <div class="value">${item.tser}%</div>
-    </div>
-
-    <div class="spec">
-    <div class="label">Fényáteresztés</div>
-    <div class="stars">${stars(item.light_stars)}</div>
-    <div class="value">${item.vlt}%</div>
-    </div>
-
-    <div class="spec">
-    <div class="label">Belátásvédelem</div>
-    <div class="stars">${stars(item.privacy_stars)}</div>
-    <div class="value">${item.reflect_ext}%</div>
-    </div>
-
-    </div>
-
-    <a class="result-link"
-    href="${item.url}"
-    target="_blank">
-
-    Megnézem a terméket
-
-    </a>
-
-    </div>
-
-    </article>
-    `;
-
-}
 
 if (leadForm) {
     leadForm.addEventListener("submit", async (e) => {
@@ -447,12 +328,22 @@ function stars(n){
 }
 
 document.querySelectorAll('input[name="surface"]').forEach(el=>{
-  el.addEventListener("change", hideGlassSteps);
+  el.addEventListener("change", updateFlow);
 });
 
 
 (async function init() {
+
+  steps.forEach(step=>{
+    step.querySelectorAll("[required]").forEach(el=>{
+      el.dataset.originalRequired = "true";
+    });
+  });
+
+  updateFlow();
+
   showStep(0);
+
 })();
 
 

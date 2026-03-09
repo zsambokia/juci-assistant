@@ -234,7 +234,7 @@ form{
 }
 
 .result-cards{
-  display:flex;
+  display:grid;
   gap:18px;
 }
 
